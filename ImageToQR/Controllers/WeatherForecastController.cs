@@ -21,15 +21,14 @@ namespace ImageToQR.Controllers
 
         }
 
-        [HttpPost(Name = "Save")]
+        [HttpPost()]
         public IActionResult SaveImage([FromForm] IFormFile objFile)
         {
             var output = _ImageService.SaveImage(objFile);
             return File(output, "image/png");
         }
 
-        [HttpGet(Name = "Get")]
-        [Route("{uid}")]
+        [HttpGet("{uid}")]
         public IActionResult GetImage([FromRoute] Guid uid)
         {
             var output = _ImageService.GetImage(uid);

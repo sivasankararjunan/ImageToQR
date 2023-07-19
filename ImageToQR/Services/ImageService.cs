@@ -14,15 +14,10 @@ namespace ImageToQR.Services
             {
                 objFile.CopyTo(stream);
                 var bytes = stream.ToArray();
-                var stringValue = Convert.ToBase64String(bytes);
+                return Convert.ToBase64String(bytes);
             }
 
-            using (var reader = new StreamReader(objFile.OpenReadStream()))
-            {
-                while (reader.Peek() >= 0)
-                    result.AppendLine(reader.ReadLine());
-            }
-            return result.ToString();
+
         }
 
         internal static byte[] GenerateQrCode(Guid uid)
