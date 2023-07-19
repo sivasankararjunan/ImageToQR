@@ -23,7 +23,7 @@ namespace ImageToQR.Services
         internal static byte[] GenerateQrCode(Guid uid)
         {
             QRCodeGenerator QrGenerator = new QRCodeGenerator();
-            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode($"https://localhost:7274/WeatherForecast/Get/{uid}", QRCodeGenerator.ECCLevel.Q);
+            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode($"https://localhost:7274/WeatherForecast/{uid}", QRCodeGenerator.ECCLevel.Q);
             QRCode QrCode = new QRCode(QrCodeInfo);
             Bitmap QrBitmap = QrCode.GetGraphic(60);
             using (var stream = new MemoryStream())

@@ -1,4 +1,5 @@
 ﻿using ImageToQR.DB;
+using Microsoft.EntityFrameworkCore;
 using QRCoder;
 using SQLitePCL;
 using System.IO;
@@ -28,7 +29,7 @@ namespace ImageToQR.Services
         }
         public byte[] GetImage(Guid uid)
         {
-            var image = _Context.BlobStores.FirstOrDefault(x => x.Uid == uid);
+            var image = _Context.BlobStores.FirstOrDefault(x => EF.Equals(x.Uid, uid));
             if (image == null)
             {
                 throw new BadHttpRequestException("Invalid Uid");
