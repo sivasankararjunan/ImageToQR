@@ -1,41 +1,36 @@
-﻿using ImageToQR.DB;
-using Microsoft.EntityFrameworkCore;
-using QRCoder;
-using SQLitePCL;
-using System.IO;
+﻿using QRCoder;
+using System.Drawing;
 using System.Text;
 
 namespace ImageToQR.Services
 {
-    public interface IImageService
+    public static class Utilities
     {
-        byte[] GetImage(Guid uid);
-        byte[] SaveImage(IFormFile objFile);
-    }
-    public class ImageService : IImageService
-    {
-        private readonly ImageDataContext _Context;
-        public ImageService(ImageDataContext context)
+        public static string FiletoString(IFormFile objFile)
         {
-            this._Context = context;
-        }
-        public byte[] SaveImage(IFormFile objFile)
-        {
-            var image = Utilities.FiletoString(objFile);
-            var uid = Guid.NewGuid();
-            this._Context.BlobStores.Add(new BlobStore { Blob = image, Uid = uid });
-            this._Context.SaveChanges();
-            return Utilities.GenerateQrCode(uid);
-        }
-        public byte[] GetImage(Guid uid)
-        {
-            var image = _Context.BlobStores.FirstOrDefault(x => EF.Equals(x.Uid, uid));
-            if (image == null)
+
+            var result = new StringBuilder();
+            using (var stream = new MemoryStream())
             {
-                throw new BadHttpRequestException("Invalid Uid");
+                objFile.CopyTo(stream);
+                var bytes = stream.ToArray();
+                return Convert.ToBase64String(bytes);
             }
-            return Convert.FromBase64String(image.Blob);
+
+
         }
 
+        internal static byte[] GenerateQrCode(Guid uid)
+        {
+            QRCodeGenerator QrGenerator = new QRCodeGenerator();
+            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode($"https://localhost:7274/Image/{uid}", QRCodeGenerator.ECCLevel.Q);
+            QRCode QrCode = new QRCode(QrCodeInfo);
+            Bitmap QrBitmap = QrCode.GetGraphic(60);
+            using (var stream = new MemoryStream())
+            {
+                QrBitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                return stream.ToArray();
+            };
+        }
     }
 }

@@ -24,15 +24,30 @@ namespace ImageToQR.Controllers
         [HttpPost()]
         public IActionResult SaveImage([FromForm] IFormFile objFile)
         {
-            var output = _ImageService.SaveImage(objFile);
-            return File(output, "image/png");
+            try
+            {
+                var output = _ImageService.SaveImage(objFile);
+                return File(output, "image/png");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{uid}")]
         public IActionResult GetImage([FromRoute] Guid uid)
         {
-            var output = _ImageService.GetImage(uid);
-            return File(output, "image/png");
+            try 
+            { 
+                var output = _ImageService.GetImage(uid);
+                _ImageService.deleteImageAsync(uid);
+                return File(output, "image/png");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
