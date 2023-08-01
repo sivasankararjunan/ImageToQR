@@ -7,14 +7,14 @@ namespace ImageToQR.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class ImageController : ControllerBase
     {
 
 
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<ImageController> _logger;
         private readonly IImageService _ImageService;
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IImageService imageService)
+        public ImageController(ILogger<ImageController> logger, IImageService imageService)
         {
             _logger = logger;
             _ImageService = imageService;
