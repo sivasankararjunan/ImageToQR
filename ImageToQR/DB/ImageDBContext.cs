@@ -19,6 +19,13 @@ namespace ImageToQR.DB
             options.UseSqlite(Configuration.GetConnectionString("BlobConnection"));
         }
 
+        //public void DeleteImage(Guid uid)
+        //{
+        //    var del = this.BlobStores.Find(uid);
+        //    this.BlobStores.Remove(del);
+        //    this.SaveChanges();
+        //}
+
         public DbSet<BlobStore> BlobStores { get; set; }
     }
 }

@@ -13,14 +13,17 @@ namespace ImageToQR.Services
         byte[] GetImage(Guid uid);
         byte[] SaveImage(IFormFile objFile);
         byte[] GetQr(Guid uid);
-        void deleteImageAsync(Guid uuid);
+        Task deleteImageAsync(Guid uuid);
     }
     public class ImageService : IImageService
     {
         private readonly ImageDataContext _Context;
-        public ImageService(ImageDataContext context)
+        public static List<Guid> pv = new List<Guid>();
+        private readonly IServiceScopeFactory ssf;
+        public ImageService(IServiceScopeFactory servicef, ImageDataContext context)
         {
             this._Context = context;
+            this.ssf = servicef;
         }
         public byte[] SaveImage(IFormFile objFile)
         {
@@ -49,10 +52,27 @@ namespace ImageToQR.Services
             }
             return Convert.FromBase64String(image.Blob);
         }
-        public async void deleteImageAsync(Guid uuid)
+        public async Task deleteImageAsync(Guid uuid)
         {
-            _Context.BlobStores.Remove(_Context.BlobStores.FirstOrDefault(x=> EF.Equals(x.Uid,uuid)));
-            _Context.SaveChanges();
+            if (!pv.Contains(uuid))
+            {
+                pv.Add(uuid);
+                
+                try
+                {
+                    using (var context = ssf.CreateScope().ServiceProvider.GetRequiredService<ImageDataContext>())
+                    {
+                        await Task.Delay(240000);
+                        context.BlobStores.Remove(context.BlobStores.FirstOrDefault(x => EF.Equals(x.Uid, uuid)));
+                        context.SaveChanges();
+                        pv.Remove(uuid);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
         }
 
     }

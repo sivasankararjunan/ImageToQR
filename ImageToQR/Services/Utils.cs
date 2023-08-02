@@ -8,8 +8,6 @@ namespace ImageToQR.Services
     {
         public static string FiletoString(IFormFile objFile)
         {
-
-            var result = new StringBuilder();
             using (var stream = new MemoryStream())
             {
                 objFile.CopyTo(stream);
@@ -23,7 +21,7 @@ namespace ImageToQR.Services
         internal static byte[] GenerateQrCode(Guid uid)
         {
             QRCodeGenerator QrGenerator = new QRCodeGenerator();
-            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode($"https://localhost:7274/Image/{uid}", QRCodeGenerator.ECCLevel.Q);
+            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode($"https://localhost:44320/ShowPath.aspx?uid={uid}", QRCodeGenerator.ECCLevel.Q);
             QRCode QrCode = new QRCode(QrCodeInfo);
             Bitmap QrBitmap = QrCode.GetGraphic(60);
             using (var stream = new MemoryStream())
