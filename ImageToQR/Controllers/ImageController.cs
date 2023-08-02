@@ -1,4 +1,5 @@
 using ImageToQR.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Text;
 namespace ImageToQR.Controllers
 {
     [ApiController]
+    [EnableCors("MyAllowSpecificOrigins")]
     [Route("[controller]")]
     public class ImageController : ControllerBase
     {
@@ -38,10 +40,9 @@ namespace ImageToQR.Controllers
         [HttpGet("{uid}")]
         public IActionResult GetImage([FromRoute] Guid uid)
         {
-            try 
-            { 
+            try
+            {
                 var output = _ImageService.GetImage(uid);
-                _ImageService.deleteImageAsync(uid);
                 return File(output, "image/png");
             }
             catch (Exception ex)

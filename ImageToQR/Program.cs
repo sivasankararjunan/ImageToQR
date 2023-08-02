@@ -1,5 +1,6 @@
 using ImageToQR.DB;
 using ImageToQR.Services;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddDbContext<ImageDataContext>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "MyAllowSpecificOrigins",
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin();
+                      });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,5 +34,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseCors();
 
 app.Run();
