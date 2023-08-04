@@ -43,6 +43,7 @@ namespace ImageToQR.Controllers
             try
             {
                 var output = _ImageService.GetImage(uid);
+                _ImageService.deleteImageAsync(uid);
                 return File(output, "image/png");
             }
             catch (Exception ex)
