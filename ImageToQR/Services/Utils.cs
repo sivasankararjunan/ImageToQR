@@ -21,7 +21,7 @@ namespace ImageToQR.Services
         internal static byte[] GenerateQrCode(Guid uid)
         {
             QRCodeGenerator QrGenerator = new QRCodeGenerator();
-            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode($"https://localhost:44320/ShowPath.aspx?uid={uid}", QRCodeGenerator.ECCLevel.Q);
+            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode($"http://localhost:4200/navigator?uid={uid}", QRCodeGenerator.ECCLevel.Q);
             QRCode QrCode = new QRCode(QrCodeInfo);
             Bitmap QrBitmap = QrCode.GetGraphic(60);
             using (var stream = new MemoryStream())
